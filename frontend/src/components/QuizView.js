@@ -6,7 +6,7 @@ import '../stylesheets/QuizView.css';
 const questionsPerPlay = 5; 
 
 class QuizView extends Component {
-  constructor(props){
+  constructor(){
     super();
     this.state = {
         quizCategory: null,
@@ -28,7 +28,7 @@ class QuizView extends Component {
         this.setState({ categories: result.categories })
         return;
       },
-      error: (error) => {
+      error: () => {
         alert('Unable to load categories. Please try your request again')
         return;
       }
@@ -70,7 +70,7 @@ class QuizView extends Component {
         })
         return;
       },
-      error: (error) => {
+      error: () => {
         alert('Unable to load question. Please try your request again')
         return;
       }
@@ -79,7 +79,6 @@ class QuizView extends Component {
 
   submitGuess = (event) => {
     event.preventDefault();
-    const formatGuess = this.state.guess.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").toLowerCase()
     let evaluate =  this.evaluateAnswer()
     this.setState({
       numCorrect: !evaluate ? this.state.numCorrect : this.state.numCorrect + 1,
