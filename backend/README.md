@@ -97,7 +97,7 @@ The API will return three types of errors:
 ## Endpoints
 ### GET/categories
 - General: Returns a list of categories and success values
-- Sample: `curl http://127.0.0.1:5000/categories`
+- Sample: `curl http://12.0.0.1:5000/categories`   
 
 ```bash
 {
@@ -116,7 +116,7 @@ The API will return three types of errors:
 - General:
    - Returns list of questions and are paginated in groups of 10.
    - It also returns lists of categories and total number of questions.
-- Sample: `curl http://127.0.0.1:5000/questions`
+- Sample: `curl http://12.0.0.1:5000/questions`
     
  ```bash
  {
@@ -210,11 +210,11 @@ The API will return three types of errors:
 - General:
    - Deletes questions by using url parameters.
    - When a question gets deleted it returns id of deleted question upon success.
-- Sample: curl  `http://127.0.0.1:5000/questions/10 -X DELETE`
+- Sample: curl  `curl http://12.0.0.1:5000/30 -X DELETE`
 
 ```bash
 {
-  "deleted": 1,
+  "deleted": 30,
   "questions": 10,
   "success": true
 }
@@ -222,7 +222,7 @@ The API will return three types of errors:
 ### POST/questions
 - General: Creates a new question using json request parameters
      - If success returns id of created questions upon success.
-- Sample: `curl http://127.0.0.1:5000/questions/questions -X POST -H "Content-Type: application/json" -d '{"question": "Off what country are the islands of Islay, Mull, and St. Kilda located - Ireland, Scotland, or Iceland?", "answer": "Scotland - There are over 790 islands in Scotland; around 130 are inhabited.", "difficulty": 3, "category": "3" }`
+- Sample: `curl http://12.0.0.1:5000/questions -X  POST -H "Content-Type: application/json" -d '{"questions": "Off what country are the islands of Islay, Mull, and St. Kilda located - Ireland, Scotland, or Iceland?"-d , "answer":"Scotland - There are over 790 islands in Scotland; around 130 are inhabited.","difficulty":3,"category":"3"} `
 
 ```bash
 {
@@ -235,7 +235,7 @@ The API will return three types of errors:
 ### POST/questions/search
 
 - General : If search term is included it returns id of created questions upon success
-- Sample: `curl http://127.0.0.1:5000/questions/search -X POST -H "Content-Type: application/json" -d '{"searchTerm":"who invented peanut butter?"}'`
+- Sample: `curl http://12.0.0.1:5000/questions -X  POST -H "Content-Type: application/json" -d '{'searchTerm":Who invented peanut butter?"}'`
 
 ```bash
 {
@@ -258,7 +258,7 @@ The API will return three types of errors:
 - General
    - Get questions based on category id by using url paramaters. 
    - If success it returns json object with paginated matching questions.
-- Sample `http://127.0.0.1:5000/categories/1/questions`
+- Sample `curl http://12.0.0.1:5000/categories/1/questions`
 
 ```bash
 
@@ -334,7 +334,7 @@ The API will return three types of errors:
 
 - General:
     - When hit play it returns random questions using the submitted category and previous questions.
-    - Sample: `curl http://127.0.0.1:5000/quizzes -X POST -H "Content-Type: application/json" -d '{"previous_questions": [26, 27], "quiz_category": {"type": "Science", "id": "1"}}'`
+    - Sample: `curl http://12.0.0.1:5000/questions -X  POST -H "Content-Type: application/json" -d '{"previous_questions":[26,27],"quiz_category": {"type":"Science", "id":"1"}}`
     
 ```bash
     
