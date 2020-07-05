@@ -64,7 +64,7 @@ class TriviaTestCase(unittest.TestCase):
 
     #  Write tests for search - at minimum two that check a response when there are results and when there are none
 
-    def test_delete_question(self):
+    def test_deleted_question(self):
         res = self.client().delete('/questions/10')
         data = json.loads(res.data)
 
@@ -87,7 +87,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
 
-    def fail_test_add_or_create_questions(self):
+    def test_404_add_or_create_questions(self):
         res = self.client().post('/questions')
         data = json.loads(res.data)
 
@@ -114,27 +114,27 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['total_questions'])
         self.assertTrue(len(data['questions']))
 
-    def test_bad_categories(self):
+    def test_422_bad_categories(self):
         res = self.client().get('/categories/1000/questions')
         data = json.loads(res.data)
 
-        self.assertEqual(res.status_code, 404)
+        self.assertEqual(res.status_code, 422)
         self.assertEqual(data['success'], False)
-        self.assertEqual(data['message'], 'resource not found')
+        self.assertEqual(data['message'], 'unprocessable')
 
     def test_quizzes(self):
         res = self.client().post('/quizzes',
-                                 json={'previous_questions': [], 'quiz_category': {'type': 'Art', 'id': 1}})
+                                 json={'previous_questions': [1, 2, 3, 4], 'quiz_category': {'type': 'Geography', 'id': 134}})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
 
-    def fail_test_post_quizzes(self):
+    def test_422_post_quizzes(self):
         res = self.client().post('/quizzes')
         data = json.loads(res.data)
 
-        self.assertEqual(res.statust_code, 422)
+        self.assertEqual(res.status_code, 422)
         self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'unprocessable')
 
