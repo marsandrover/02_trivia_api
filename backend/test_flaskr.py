@@ -70,9 +70,9 @@ class TriviaTestCase(unittest.TestCase):
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
-        self.assertEqual(data['message'], 10)
+        self.assertEqual(data['deleted_questions_id'], 10)
 
-    def test_delete_question_already_deleted(self):
+    def test_deleted_question_already_deleted(self):
         res = self.client().delete('/questions/1000')
         data = json.loads(res.data)
 
@@ -121,14 +121,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 422)
         self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'unprocessable')
-
-    def test_quizzes(self):
-        res = self.client().post('/quizzes',
-                                 json={'previous_questions': [1, 2, 3, 4], 'quiz_category': {'type': 'Geography', 'id': 134}})
-        data = json.loads(res.data)
-
-        self.assertEqual(res.status_code, 200)
-        self.assertEqual(data['success'], True)
+    
 
     def test_422_post_quizzes(self):
         res = self.client().post('/quizzes')
@@ -139,6 +132,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['message'], 'unprocessable')
 
 
+
 # Make the tests conveniently executable
-if __name__ == "__main__":
+if __name__ == "__main__" :
     unittest.main()
