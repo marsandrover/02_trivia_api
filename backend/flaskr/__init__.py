@@ -84,10 +84,10 @@ def create_app(test_config=None):
     # Create an endpoint to DELETE question using a question ID.
 
     @app.route('/questions/<int:question_id>', methods=['DELETE'])
-    def delete_questions(question_id):
+    def deleted_questions(question_id):
 
         try:
-            print(delete_questions)
+      
             deleted_questions = Question.query.filter(
                 Question.id == question_id).one_or_none()
 
@@ -132,13 +132,12 @@ def create_app(test_config=None):
                  # insert question
                  question.insert()
                  selection = Question.query.order_by(Question.id).all()
-                 current_query = paginate_questions(request, selection)
+                
 
                  # return jsonify if success
                  return jsonify({
                      'success': True,
                      'created': question.id,
-                     'questions': current_query,
                      'total_questions': len(selection)
 
                  })
