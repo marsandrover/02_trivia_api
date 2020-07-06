@@ -26,7 +26,7 @@ def create_app(test_config=None):
     setup_db(app)
 
     # Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
-    CORS(app, resources={'/': {'origins': '*'}})
+    CORS(app, resources={'/api': {'origins': '*'}})
 
     # Use the after_request decorator to set Access-Control-Allow
     @app.after_request
@@ -115,35 +115,39 @@ def create_app(test_config=None):
     # Create an endpoint to POST a new question, which will require the question and answer text, category, and difficulty score.
     @app.route('/questions', methods=['POST'])
     def add_or_create_questions():
-
-        # get request for data from json and removed search data from here because I would get an error
-        data = request.get_json()
-        # request data for new informations
-        new_question = data.get('question',None)
-        new_answer = data.get('answer',None)
-        new_category = data.get('category',None)
-        new_difficulty = data.get('diffculty',None)
-
+        
         try:
-            # get new information
-            question = Question(question=new_question, answer=new_answer,
+            # get request for data from json and removed search data from here because I would get an error
+            data = request.get_json()
+            # request data for new informations
+            new_questions = data.get('questions')
+            new_answer = data.get('answer')
+            new_category = data.get('category')
+            new_difficulty = data.get('diffculty')
+
+            try:
+                 # get new information
+                 question = Question(question=new_questions, answer=new_answer,
                                 category=new_category, difficulty=new_difficulty)
-            # insert question
-            question.insert()
-            selection = Question.query.order_by(Question.id).all()
-            current_query = paginate_questions(request, selection)
+                 # insert question
+                 question.insert()
+                 selection = Question.query.order_by(Question.id).all()
+                 current_query = paginate_questions(request, selection)
 
-            # return jsonify if success
-            return jsonify({
-                'success': True,
-                'created': question.id,
-                'questions': current_query,
-                'total_questions': len(selection)
+                 # return jsonify if success
+                 return jsonify({
+                     'success': True,
+                     'created': question.id,
+                     'questions': current_query,
+                     'total_questions': len(selection)
 
-            })
+                 })
+            except Exception as e:
+                 print(e)
+                 abort(422)
         except Exception as e:
             print(e)
-            abort(422)
+            abort(404)
 
     # Create a POST to search new questions
     @app.route('/questions/search', methods=['POST'])
@@ -204,9 +208,9 @@ def create_app(test_config=None):
         try:
             data = request.get_json()
             print(data)
-            # abort 400 if there is no data
+            # abort 404 if there is no data
             if not data:
-                abort(400)
+                abort(404)
             # get quiz category and previous questions
             quiz_category = data.get('quiz_category', None)
             previous_qs = data.get('previous_questions', None)
