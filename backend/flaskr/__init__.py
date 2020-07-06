@@ -207,9 +207,7 @@ def create_app(test_config=None):
         try:
             data = request.get_json()
             print(data)
-            # abort 404 if there is no data
-            if not data:
-                abort(404)
+    
             # get quiz category and previous questions
             quiz_category = data.get('quiz_category', None)
             previous_qs = data.get('previous_questions', None)
