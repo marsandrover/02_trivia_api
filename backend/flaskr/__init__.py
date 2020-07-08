@@ -45,12 +45,10 @@ def create_app(test_config=None):
         category_list = {
             category.id: category.type for category in categories}
 
-        if category_list == 0:
-            abort(404)
-
         return jsonify({
             'success': True,
-            'categories': category_list
+            'categories': category_list,
+            'status':200 #success
         })
 
     # Create an endpoint to handle GET requests for questions, including pagination (every 10 questions).
@@ -66,6 +64,7 @@ def create_app(test_config=None):
 
         categories = Category.query.all()
         category_list = {category.id: category.type for category in categories}
+        categories = list(map(Category.format, Category.query.all()))
 
         # abort 404 if current questions is none
         if len(current_query) == 0:
@@ -114,39 +113,31 @@ def create_app(test_config=None):
 
     # Create an endpoint to POST a new question, which will require the question and answer text, category, and difficulty score.
     @app.route('/questions', methods=['POST'])
-    def add_or_create_questions():
-        
+    def create_question():
+        data = request.get_json()
+
+        new_question = data.get('question',None)
+        new_answer   =  data.get('answer',None)
+        new_difficulty = data.get('difficulty',None)
+        new_category   = data.get('category',None)
+
         try:
-            # get request for data from json and removed search data from here because I would get an error
-            data = request.get_json()
-            # request data for new informations
-            new_questions = data.get('questions')
-            new_answer = data.get('answer')
-            new_category = data.get('category')
-            new_difficulty = data.get('diffculty')
+            # get new information
+            question = Question(question = new_question, answer = new_answer,difficulty = new_difficulty,category = new_category)
+            question.insert()
 
-            try:
-                 # get new information
-                 question = Question(question=new_questions, answer=new_answer,
-                                category=new_category, difficulty=new_difficulty)
-                 # insert question
-                 question.insert()
-                 selection = Question.query.order_by(Question.id).all()
-                
+            selection = Question.query.order_by(Question.id).all()
 
-                 # return jsonify if success
-                 return jsonify({
-                     'success': True,
-                     'created': question.id,
-                     'total_questions': len(selection)
 
-                 })
-            except Exception as e:
-                 print(e)
-                 abort(422)
-        except Exception as e:
+            # return jsonify if success
+            return jsonify({
+                'success': True,
+                'created': question.id,
+                'total_questions': len(selection)
+            })
+        except Exception as e: 
             print(e)
-            abort(404)
+            abort(422)
 
     # Create a POST to search new questions
     @app.route('/questions/search', methods=['POST'])
@@ -186,9 +177,6 @@ def create_app(test_config=None):
                 Question.category == category_id).order_by(Question.id).all()
             # paginated current question by using request and selection
             current_query = paginate_questions(request, selection)
-            # abort(404) if current questions is none
-            if len(current_query) == 0:
-                abort(404)
             # return jsonify if success
             return jsonify({
                 'success': True,
@@ -198,7 +186,7 @@ def create_app(test_config=None):
             })
         except Exception as e:
             print(e)
-            abort(422)
+            abort(404)
 
     # Create an endpoint to POST to play quiz
     @app.route('/quizzes', methods=['POST'])
@@ -208,10 +196,11 @@ def create_app(test_config=None):
             data = request.get_json()
             print(data)
     
-            # get quiz category and previous questions
+            # get quiz category and previous questions(similar like POST create question)
             quiz_category = data.get('quiz_category', None)
             previous_qs = data.get('previous_questions', None)
             print(previous_qs)
+
             # print previous question and filter them into dictionary
             test_questions = Question.query.filter(
                 Question.id.notin_(previous_qs)).all()
