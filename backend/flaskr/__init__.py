@@ -48,7 +48,7 @@ def create_app(test_config=None):
         return jsonify({
             'success': True,
             'categories': category_list,
-            'status':200 #success
+            'status': 200  # success
         })
 
     # Create an endpoint to handle GET requests for questions, including pagination (every 10 questions).
@@ -86,7 +86,7 @@ def create_app(test_config=None):
     def deleted_questions(question_id):
 
         try:
-      
+
             deleted_questions = Question.query.filter(
                 Question.id == question_id).one_or_none()
 
@@ -116,18 +116,18 @@ def create_app(test_config=None):
     def create_question():
         data = request.get_json()
 
-        new_question = data.get('question',None)
-        new_answer   =  data.get('answer',None)
-        new_difficulty = data.get('difficulty',None)
-        new_category   = data.get('category',None)
+        new_question = data.get('question', None)
+        new_answer = data.get('answer', None)
+        new_difficulty = data.get('difficulty', None)
+        new_category = data.get('category', None)
 
         try:
             # get new information
-            question = Question(question = new_question, answer = new_answer,difficulty = new_difficulty,category = new_category)
+            question = Question(question=new_question, answer=new_answer,
+                                difficulty=new_difficulty, category=new_category)
             question.insert()
 
             selection = Question.query.order_by(Question.id).all()
-
 
             # return jsonify if success
             return jsonify({
@@ -135,7 +135,7 @@ def create_app(test_config=None):
                 'created': question.id,
                 'total_questions': len(selection)
             })
-        except Exception as e: 
+        except Exception as e:
             print(e)
             abort(422)
 
@@ -195,7 +195,7 @@ def create_app(test_config=None):
         try:
             data = request.get_json()
             print(data)
-    
+
             # get quiz category and previous questions(similar like POST create question)
             quiz_category = data.get('quiz_category', None)
             previous_qs = data.get('previous_questions', None)
