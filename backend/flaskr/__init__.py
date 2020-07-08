@@ -128,11 +128,13 @@ def create_app(test_config=None):
             question.insert()
 
             selection = Question.query.order_by(Question.id).all()
+            current_question = paginate_questions(request, selection)
 
             # return jsonify if success
             return jsonify({
                 'success': True,
                 'created': question.id,
+                'questions': current_question,
                 'total_questions': len(selection)
             })
         except Exception as e:
