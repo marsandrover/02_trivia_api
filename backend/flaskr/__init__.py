@@ -147,7 +147,7 @@ def create_app(test_config=None):
 
         # load quest for data
         data = request.get_json()
-        # get new search term
+        # get new search term using new_question = data.get('question', None)
         new_search = data.get('searchTerm', None)
 
         # get new  search results (if the udacity book search result doesnt work remove it from create question
@@ -203,7 +203,7 @@ def create_app(test_config=None):
             previous_qs = data.get('previous_questions', None)
             print(previous_qs)
 
-            # print previous question and filter them into dictionary
+            # print previous question and filter them into dictionary 
             test_questions = Question.query.filter(
                 Question.id.notin_(previous_qs)).all()
             # get category id and if category is 0 query them all
